@@ -27,6 +27,8 @@ body {
   justify-content: center;
   user-select: none;
   -webkit-user-select: none;
+  box-sizing: border-box;
+  padding: 40px 0;
 }
 
 #app {
@@ -170,6 +172,15 @@ input[type="color"]::-webkit-color-swatch {
   color: rgba(255, 255, 255, 0.35);
   font-weight: 400;
   letter-spacing: 0.5px;
+}
+
+/* En móviles o pantallas bajitas, hacemos que el footer fluya normal para evitar que se superponga con la caja */
+@media (max-height: 850px), (max-width: 480px) {
+  .footer {
+    position: relative;
+    bottom: auto;
+    margin-top: 50px;
+  }
 }
 
 .floating-number {
