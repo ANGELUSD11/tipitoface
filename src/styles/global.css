@@ -25,6 +25,8 @@ body {
   min-width: 320px;
   min-height: 100vh;
   justify-content: center;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 #app {
@@ -32,6 +34,22 @@ body {
   max-width: 600px;
   margin: 0 auto;
   text-align: center;
+}
+
+.main-title {
+  font-size: 56px;
+  font-weight: 900;
+  margin: 0 0 25px 0;
+  text-transform: uppercase;
+  color: #fff;
+  letter-spacing: 5px;
+  text-shadow: 
+    -2px -2px 0 rgba(0,0,0,0.8),
+     2px -2px 0 rgba(0,0,0,0.8),
+    -2px  2px 0 rgba(0,0,0,0.8),
+     2px  2px 0 rgba(0,0,0,0.8),
+    0 6px 0px rgba(0,0,0,0.6), 
+    0 15px 25px rgba(0,0,0,0.4);
 }
 
 .container {
