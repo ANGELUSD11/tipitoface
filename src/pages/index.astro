@@ -1,17 +1,63 @@
 ---
-
+import '../styles/global.css';
 ---
 
+<!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tipito Icon</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+</head>
+<body style="opacity: 0;"> <!-- Inicialmente 0 para prevenir FOUC, luego JS/CSS lo inyecta como 1 -->
+  <div id="app">
+    <div class="container">
+      <div class="icon-wrapper" id="icon-wrapper">
+        <svg id="gd-icon" viewBox="0 0 200 200" width="250" height="250" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="faceGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="var(--color-primary, #66ff00)" />
+              <stop offset="100%" stop-color="var(--color-secondary, #0099ff)" />
+            </linearGradient>
+          </defs>
+          
+          <rect class="outer" x="0" y="0" width="200" height="200" rx="30" fill="var(--color-secondary, #0099ff)" />
+          <rect x="8" y="8" width="184" height="184" rx="22" fill="#000" />
+          <rect class="inner" x="22" y="22" width="156" height="156" rx="12" fill="url(#faceGradient)" />
+          <rect x="55" y="130" width="90" height="14" rx="7" fill="#000" />
+          
+          <g id="eyes">
+              <ellipse id="eye-left" cx="65" cy="95" rx="16" ry="16" fill="#000" />
+              <ellipse id="eye-right" cx="135" cy="95" rx="16" ry="16" fill="#000" />
+          </g>
+        </svg>
+      </div>
+
+      <div class="controls">
+        <div class="control-group">
+          <label for="primary-color">Top Color</label>
+          <input type="color" id="primary-color" value="#66ff00">
+        </div>
+        <div class="control-group">
+          <label for="secondary-color">Bottom & Border Color</label>
+          <input type="color" id="secondary-color" value="#0099ff">
+        </div>
+        <div class="control-group">
+          <label for="box-color">Box Color</label>
+          <input type="color" id="box-color" value="#00ff00">
+        </div>
+      </div>
+    </div>
+    
+    <footer class="footer">
+      Made with <span class="heart">❤️</span> by ANGELUS11
+    </footer>
+  </div>
+
+  <script src="../scripts/main.ts"></script>
+</body>
 </html>
