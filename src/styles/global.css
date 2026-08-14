@@ -86,6 +86,16 @@ body {
   display: block;
   filter: drop-shadow(0 15px 25px rgba(0,0,0,0.4));
   overflow: visible;
+  transition: transform 0.3s ease;
+}
+
+#gd-icon.sleeping {
+  animation: breathe 3.5s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1) translateY(0); }
+  50% { transform: scale(1.03) translateY(-4px); }
 }
 
 #eyes {
@@ -98,11 +108,11 @@ body {
 }
 
 #eye-left {
-  transform-origin: 65px 95px;
+  transform-origin: 55px 95px;
 }
 
 #eye-right {
-  transform-origin: 135px 95px;
+  transform-origin: 145px 95px;
 }
 
 .controls {

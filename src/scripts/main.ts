@@ -42,9 +42,11 @@ document.addEventListener('mousemove', (e) => {
 });
 
 let activeEye: HTMLElement | null = null;
+let isSleeping = false;
 
-// Blink one eye on click
-gdIcon?.addEventListener('mousedown', () => {
+// Blink one eye on click (or pointerdown for mobile consistency)
+gdIcon?.addEventListener('pointerdown', () => {
+  if (isSleeping) return; // Don't do a manual blink if we are about to wake up
   activeEye = Math.random() > 0.5 ? eyeLeft : eyeRight;
   if(activeEye) activeEye.style.transform = 'scaleY(0.1)';
 });
@@ -56,13 +58,24 @@ window.addEventListener('mouseup', () => {
   }
 });
 
-// Occasional auto-blink
+// Occasional auto-blink and sleep mechanic
 setInterval(() => {
+  if (isSleeping) return;
+
+  // 10% chance to fall asleep
+  if (Math.random() < 0.1) {
+    isSleeping = true;
+    if (eyeLeft) eyeLeft.style.transform = 'scaleY(0.1)';
+    if (eyeRight) eyeRight.style.transform = 'scaleY(0.1)';
+    gdIcon?.classList.add('sleeping');
+    return;
+  }
+
   const randomEye = Math.random() > 0.5 ? eyeLeft : eyeRight;
   if (randomEye) {
     randomEye.style.transform = 'scaleY(0.1)';
     setTimeout(() => {
-      randomEye.style.transform = 'scaleY(1)';
+      if (!isSleeping) randomEye.style.transform = 'scaleY(1)';
     }, 150);
   }
 }, 4000);
@@ -94,6 +107,14 @@ document.addEventListener('pointerdown', (e) => {
   // Don't spawn numbers when clicking on color pickers
   if ((e.target as HTMLElement)?.tagName?.toLowerCase() === 'input') return;
   
+  // Wake up if sleeping
+  if (isSleeping) {
+    isSleeping = false;
+    gdIcon?.classList.remove('sleeping');
+    if (eyeLeft) eyeLeft.style.transform = 'scaleY(1)';
+    if (eyeRight) eyeRight.style.transform = 'scaleY(1)';
+  }
+
   clickCount++;
   playPop();
   
