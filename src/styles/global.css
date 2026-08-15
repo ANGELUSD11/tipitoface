@@ -52,6 +52,25 @@ body {
      2px  2px 0 rgba(0,0,0,0.8),
     0 6px 0px rgba(0,0,0,0.6), 
     0 15px 25px rgba(0,0,0,0.4);
+  outline: none;
+  cursor: text;
+  transition: transform 0.2s ease, text-shadow 0.2s ease;
+  white-space: nowrap;
+}
+
+.main-title:hover {
+  transform: scale(1.02);
+}
+
+.main-title:focus {
+  transform: scale(0.98);
+  text-shadow: 
+    -2px -2px 0 rgba(0,0,0,0.8),
+     2px -2px 0 rgba(0,0,0,0.8),
+    -2px  2px 0 rgba(0,0,0,0.8),
+     2px  2px 0 rgba(0,0,0,0.8),
+    0 3px 0px rgba(0,0,0,0.6), 
+    0 8px 15px rgba(0,0,0,0.4);
 }
 
 .container {
@@ -184,7 +203,7 @@ input[type="color"]::-webkit-color-swatch {
   letter-spacing: 0.5px;
 }
 
-/* En móviles o pantallas bajitas, hacemos que el footer fluya normal para evitar que se superponga con la caja */
+/* On mobile or short screens, allow footer to flow normally to prevent overlapping with the box */
 @media (max-height: 850px), (max-width: 480px) {
   .footer {
     position: relative;
@@ -222,4 +241,88 @@ input[type="color"]::-webkit-color-swatch {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
+}
+
+/* --- Pet Mode & Custom Cursor --- */
+.pet-mode, .pet-mode * {
+  cursor: none !important;
+}
+
+.custom-cursor {
+  position: fixed;
+  font-size: 40px;
+  pointer-events: none;
+  z-index: 10002;
+  display: none;
+  transform-origin: bottom center;
+}
+
+.pet-mode .custom-cursor {
+  display: block;
+}
+
+.custom-cursor.petting {
+  animation: patpat 0.3s ease-in-out infinite alternate;
+}
+
+@keyframes patpat {
+  0% { transform: rotate(-15deg); }
+  100% { transform: rotate(15deg); }
+}
+
+/* --- Floating Zzz --- */
+.floating-zzz {
+  position: fixed;
+  font-size: 28px;
+  color: #fff;
+  font-family: 'Fredoka One', system-ui, sans-serif;
+  pointer-events: none;
+  z-index: 10000;
+  text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+  animation: floatZzz 2s ease-in forwards;
+}
+
+@keyframes floatZzz {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.5); }
+  20% { opacity: 1; transform: translate(15px, -20px) scale(1); }
+  80% { opacity: 1; transform: translate(-10px, -60px) scale(1.5); }
+  100% { opacity: 0; transform: translate(0, -80px) scale(2); }
+}
+
+.toast {
+  position: fixed;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 25, 55, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  padding: 15px 25px;
+  border-radius: 25px;
+  font-size: 18px;
+  font-family: 'Fredoka One', system-ui, sans-serif;
+  z-index: 10001;
+  animation: fadeOutToast 3s forwards;
+  pointer-events: none;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
+@keyframes fadeOutToast {
+  0% { opacity: 0; transform: translate(-50%, -20px) scale(0.9); }
+  10% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+  80% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -20px) scale(0.9); }
+}
+
+.floating-heart {
+  position: fixed;
+  font-size: 24px;
+  pointer-events: none;
+  z-index: 10000;
+  animation: floatHeart 0.8s ease-out forwards;
+}
+
+@keyframes floatHeart {
+  0% { opacity: 1; transform: translate(-50%, -50%) scale(0.5); }
+  100% { opacity: 0; transform: translate(-50%, calc(-50% - 60px)) scale(1.2); }
 }

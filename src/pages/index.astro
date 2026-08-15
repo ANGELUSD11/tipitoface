@@ -13,9 +13,9 @@ import '../styles/global.css';
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
 </head>
-<body style="opacity: 0;"> <!-- Inicialmente 0 para prevenir FOUC, luego JS/CSS lo inyecta como 1 -->
+<body style="opacity: 0;"> <!-- Initially 0 to prevent FOUC, injected as 1 by JS/CSS later -->
   <div id="app">
-    <h1 class="main-title">Tipito</h1>
+    <h1 class="main-title" contenteditable="true" spellcheck="false" id="editable-title" title="Click to edit!">Tipito</h1>
     <div class="container">
       <div class="icon-wrapper" id="icon-wrapper">
         <svg id="gd-icon" viewBox="0 0 200 200" width="250" height="250" xmlns="http://www.w3.org/2000/svg">

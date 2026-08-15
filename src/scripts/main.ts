@@ -6,6 +6,12 @@ const eyeLeft = document.getElementById('eye-left');
 const eyeRight = document.getElementById('eye-right');
 const eyesGroup = document.getElementById('eyes');
 const boxInput = document.getElementById('box-color');
+const editableTitle = document.getElementById('editable-title');
+
+const customCursor = document.createElement('div');
+customCursor.className = 'custom-cursor';
+customCursor.textContent = '🤚';
+document.body.appendChild(customCursor);
 
 // Change colors functionality
 primaryInput?.addEventListener('input', (e) => {
@@ -20,8 +26,47 @@ boxInput?.addEventListener('input', (e) => {
   root.style.setProperty('--color-box', (e.target as HTMLInputElement).value);
 });
 
+// Prevent line breaks in editable title and enforce 8 character limit
+editableTitle?.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    editableTitle.blur();
+    return;
+  }
+  
+  const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
+  if (allowedKeys.includes(e.key) || e.ctrlKey || e.metaKey) return;
+  
+  const text = editableTitle.textContent || '';
+  const selection = window.getSelection();
+  if (text.length >= 8 && selection && selection.toString().length === 0) {
+    e.preventDefault();
+  }
+});
+
+// Handle paste to respect the 8 character limit safely
+editableTitle?.addEventListener('paste', (e) => {
+  e.preventDefault();
+  const text = e.clipboardData?.getData('text') || '';
+  const selection = window.getSelection();
+  if (!selection) return;
+  
+  const currentText = editableTitle.textContent || '';
+  const selectionText = selection.toString();
+  const allowedLength = 8 - (currentText.length - selectionText.length);
+  
+  if (allowedLength > 0) {
+    const textToInsert = text.slice(0, allowedLength);
+    document.execCommand('insertText', false, textToInsert);
+  }
+});
+
 // Eyes follow the cursor
 document.addEventListener('mousemove', (e) => {
+  if (isPetMode) {
+    customCursor.style.left = `${e.clientX - 20}px`;
+    customCursor.style.top = `${e.clientY - 10}px`;
+  }
   if (!gdIcon || !eyesGroup) return;
   const rect = gdIcon.getBoundingClientRect();
   
@@ -43,6 +88,32 @@ document.addEventListener('mousemove', (e) => {
 
 let activeEye: HTMLElement | null = null;
 let isSleeping = false;
+let isPetMode = false;
+let petPoints = 0;
+let lastMouseX = 0;
+let petTimeout: any = null;
+
+function spawnZzz() {
+  if (!isSleeping || !gdIcon) return;
+  const zzz = document.createElement('div');
+  zzz.className = 'floating-zzz';
+  zzz.textContent = 'z';
+  const rect = gdIcon.getBoundingClientRect();
+  zzz.style.left = `${rect.left + rect.width * 0.7 + (Math.random() * 20 - 10)}px`;
+  zzz.style.top = `${rect.top + 30}px`;
+  document.body.appendChild(zzz);
+  setTimeout(() => zzz.remove(), 2000);
+}
+
+function spawnHeart(x: number, y: number) {
+  const heart = document.createElement('div');
+  heart.className = 'floating-heart';
+  heart.textContent = '❤️';
+  heart.style.left = `${x + (Math.random() * 40 - 20)}px`;
+  heart.style.top = `${y + (Math.random() * 40 - 20)}px`;
+  document.body.appendChild(heart);
+  setTimeout(() => heart.remove(), 800);
+}
 
 // Blink one eye on click (or pointerdown for mobile consistency)
 gdIcon?.addEventListener('pointerdown', () => {
@@ -68,6 +139,11 @@ setInterval(() => {
     if (eyeLeft) eyeLeft.style.transform = 'scaleY(0.1)';
     if (eyeRight) eyeRight.style.transform = 'scaleY(0.1)';
     gdIcon?.classList.add('sleeping');
+    
+    const zzzInterval = setInterval(() => {
+      if (!isSleeping) clearInterval(zzzInterval);
+      else spawnZzz();
+    }, 800);
     return;
   }
 
@@ -116,6 +192,17 @@ document.addEventListener('pointerdown', (e) => {
   }
 
   clickCount++;
+  
+  if (clickCount === 50 && !isPetMode) {
+    isPetMode = true;
+    document.body.classList.add('pet-mode');
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.textContent = 'Pat Pat Mode Unlocked! 🤚';
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+  }
+
   playPop();
   
   const floater = document.createElement('div');
@@ -130,4 +217,36 @@ document.addEventListener('pointerdown', (e) => {
   setTimeout(() => {
     floater.remove();
   }, 800);
+});
+
+// Rubbing (Pat Pat) logic on gdIcon
+gdIcon?.addEventListener('pointermove', (e) => {
+  if (!isPetMode) return;
+  const deltaX = Math.abs(e.clientX - lastMouseX);
+  lastMouseX = e.clientX;
+  
+  // If the mouse moves more than 2px, it counts as a "pet"
+  if (deltaX > 2) {
+    petPoints += deltaX;
+    if (petPoints > 50) { 
+      // Is being happily pet
+      customCursor.classList.add('petting');
+      if (eyeLeft) eyeLeft.style.transform = 'scaleY(0.1)';
+      if (eyeRight) eyeRight.style.transform = 'scaleY(0.1)';
+      
+      // Spawn random hearts while petting
+      if (Math.random() < 0.1) {
+        spawnHeart(e.clientX, e.clientY);
+      }
+      
+      clearTimeout(petTimeout);
+      petTimeout = setTimeout(() => {
+        petPoints = 0;
+        customCursor.classList.remove('petting');
+        // Only open eyes if not sleeping
+        if (!isSleeping && eyeLeft) eyeLeft.style.transform = 'scaleY(1)';
+        if (!isSleeping && eyeRight) eyeRight.style.transform = 'scaleY(1)';
+      }, 300);
+    }
+  }
 });
