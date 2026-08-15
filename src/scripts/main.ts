@@ -26,21 +26,43 @@ boxInput?.addEventListener('input', (e) => {
   root.style.setProperty('--color-box', (e.target as HTMLInputElement).value);
 });
 
-// Prevent line breaks in editable title and enforce 8 character limit
+// Prevent line breaks in editable title
 editableTitle?.addEventListener('keydown', (e) => {
   if (e.key === 'Enter') {
     e.preventDefault();
     editableTitle.blur();
-    return;
   }
+});
+
+// Enforce 8 character limit for mobile keyboards (Gboard/SwiftKey) and desktop
+editableTitle?.addEventListener('beforeinput', (e) => {
+  // Allow deletions
+  if (e.inputType && e.inputType.startsWith('delete')) return;
   
-  const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
-  if (allowedKeys.includes(e.key) || e.ctrlKey || e.metaKey) return;
-  
-  const text = editableTitle.textContent || '';
+  const currentText = editableTitle.textContent || '';
   const selection = window.getSelection();
-  if (text.length >= 8 && selection && selection.toString().length === 0) {
+  const selectionLength = selection ? selection.toString().length : 0;
+  
+  // If we're not replacing text and limit is reached, block input
+  if (currentText.length >= 8 && selectionLength === 0) {
     e.preventDefault();
+  }
+});
+
+// Fallback for older mobile browsers that ignore preventDefault on beforeinput
+editableTitle?.addEventListener('input', () => {
+  const text = editableTitle.textContent || '';
+  if (text.length > 8) {
+    editableTitle.textContent = text.slice(0, 8);
+    // Restore caret to the end
+    const range = document.createRange();
+    const sel = window.getSelection();
+    if (editableTitle.childNodes.length > 0 && sel) {
+      range.setStart(editableTitle.childNodes[0], editableTitle.textContent.length);
+      range.collapse(true);
+      sel.removeAllRanges();
+      sel.addRange(range);
+    }
   }
 });
 
