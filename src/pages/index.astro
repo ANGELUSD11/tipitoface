@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import Analytics from '@vercel/analytics/astro';
 ---
 
 <!DOCTYPE html>
@@ -12,6 +13,7 @@ import '../styles/global.css';
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+  <Analytics />
 </head>
 <body style="opacity: 0;"> <!-- Initially 0 to prevent FOUC, injected as 1 by JS/CSS later -->
   <div id="app">
